@@ -2,32 +2,63 @@ import { ActionTypes } from '../actions/types';
 
 const INITIAL_STATE = {
   states: [],
-  loading: false,
+  citys: [],
+  districts: [],
+  loading: true,
   error: false,
-  selectedState: '',
   selectedCity: '',
+  selectedDistrict: '',
+  selectedState: '',
 };
 
 export const reducers = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_LOADING:
+      return { ...state, loading: true };
+    case ActionTypes.FETCH_SUCCESS:
       return {
         ...state,
-        loading: true,
+        states: action.payload,
+        loading: false,
+        error: false,
       };
-    case ActionTypes.FETCH_SUCCESS:
-      return { states: action.payload, loading: false, error: false };
     case ActionTypes.FETCH_FAILURE:
+      return { ...state, loading: false, error: true };
+    case ActionTypes.FETCH_SUCCESS_CITYS:
+      return { ...state, citys: action.payload, loading: false, error: false };
+    case ActionTypes.FETCH_SUCCESS_DISTRICTS:
+      return {
+        ...state,
+        districts: action.payload,
+        loading: false,
+        error: false,
+      };
+    case ActionTypes.SELECTED_STATE:
       return {
         ...state,
         loading: false,
-        error: true,
+        error: false,
+        selectedState: action.payload,
+        selectedCity: '',
+        selectedDistrict: '',
+        districts: [],
+      };
+    case ActionTypes.SELECTED_CITY:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        selectedCity: action.payload,
+        selectedDistrict: '',
+      };
+    case ActionTypes.SELECTED_DISTRICT:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        selectedDistrict: action.payload,
       };
     default:
-      return state;
+      return { ...state };
   }
 };
-
-// export const reducers = combineReducers({
-//   allStates: statesReducer,
-// });
