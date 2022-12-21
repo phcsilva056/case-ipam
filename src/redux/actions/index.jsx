@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { compare } from '../../utils/utils';
 import { ActionTypes } from './types';
 
 const fetchLoading = () => {
@@ -42,7 +43,7 @@ export const loadStatesRequest = createAsyncThunk('get', async (dispatch) => {
       'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
     );
     const data = await response.json();
-    dispatch(fetchSuccess(data));
+    dispatch(fetchSuccess(data.sort(compare)));
     return data;
   } catch (error) {
     dispatch(fetchFailure(error));
@@ -59,7 +60,7 @@ export const loadCitysRequest = createAsyncThunk(
         `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${id}/municipios`
       );
       const data = await response.json();
-      dispatch(fetchSuccessCitys(data));
+      dispatch(fetchSuccessCitys(data.sort(compare)));
       return data;
     } catch (error) {
       dispatch(fetchFailure(error));
@@ -77,7 +78,7 @@ export const loadDistrictsRequest = createAsyncThunk(
         `https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${id}/distritos`
       );
       const data = await response.json();
-      dispatch(fetchSuccessDistricts(data));
+      dispatch(fetchSuccessDistricts(data.sort(compare)));
       return data;
     } catch (error) {
       dispatch(fetchFailure(error));
@@ -85,16 +86,3 @@ export const loadDistrictsRequest = createAsyncThunk(
     }
   }
 );
-
-// export const loadRequest = () => {
-//   return (dispatch) => {
-//     dispatch(fetchLoading());
-//     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
-//       .then((response) => response.json())
-//       .then((json) => {
-//         dispatch(fetchSuccess(json));
-//         return json;
-//       })
-//       .catch((error) => dispatch(fetchFailure(error)));
-//   };
-// };
