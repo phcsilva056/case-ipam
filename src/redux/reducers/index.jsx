@@ -9,6 +9,8 @@ const INITIAL_STATE = {
   selectedCity: '',
   selectedDistrict: '',
   selectedState: '',
+  mapBrazil: '',
+  mapCity: '',
 };
 
 export const reducers = (state = INITIAL_STATE, action) => {
@@ -41,6 +43,7 @@ export const reducers = (state = INITIAL_STATE, action) => {
         selectedState: action.payload,
         selectedCity: '',
         selectedDistrict: '',
+        mapCity: '',
         districts: [],
       };
     case ActionTypes.SELECTED_CITY:
@@ -57,6 +60,16 @@ export const reducers = (state = INITIAL_STATE, action) => {
         loading: false,
         error: false,
         selectedDistrict: action.payload,
+      };
+    case ActionTypes.FETCH_SUCCESS_MAP_BRAZIL:
+      return {
+        ...state,
+        mapBrazil: action.payload,
+      };
+    case ActionTypes.FETCH_SUCCESS_MAP_CITY:
+      return {
+        ...state,
+        mapCity: action.payload,
       };
     default:
       return { ...state };

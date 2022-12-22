@@ -8,11 +8,10 @@ export default function Select({
 }) {
   return (
     <SelectStyle value={selectedValue} onChange={onChange}>
-      {arrayOptions.length > 1 && (
-        <option value={''} disabled={true} className="firstOption">
-          {defaultOption}
-        </option>
-      )}
+      <option value={''} disabled={true} className="firstOption">
+        {defaultOption}
+      </option>
+
       {arrayOptions.map(({ id, nome }) => {
         return (
           <option key={id} value={id}>
