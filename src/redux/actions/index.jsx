@@ -1,5 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { compare } from '../../utils/utils';
 import { ActionTypes } from './types';
+
+const BASE_URL = 'https://servicodados.ibge.gov.br/api';
 
 const fetchLoading = () => {
   return {
@@ -14,6 +17,34 @@ const fetchSuccess = (data) => {
   };
 };
 
+const fetchSuccessCitys = (data) => {
+  return {
+    type: ActionTypes.FETCH_SUCCESS_CITYS,
+    payload: data,
+  };
+};
+
+const fetchSuccessDistricts = (data) => {
+  return {
+    type: ActionTypes.FETCH_SUCCESS_DISTRICTS,
+    payload: data,
+  };
+};
+
+const fetchSuccessMapBrazil = (data) => {
+  return {
+    type: ActionTypes.FETCH_SUCCESS_MAP_BRAZIL,
+    payload: data,
+  };
+};
+
+const fetchSuccessMapCity = (data) => {
+  return {
+    type: ActionTypes.FETCH_SUCCESS_MAP_CITY,
+    payload: data,
+  };
+};
+
 const fetchFailure = (error) => {
   return {
     type: ActionTypes.FETCH_FAILURE,
@@ -21,54 +52,63 @@ const fetchFailure = (error) => {
   };
 };
 
-const selectedStates = (state) => {
-  return {
-    type: ActionTypes.SELECTED_STATE,
-    payload: state,
-  };
-};
-
-const selectedCity = (city) => {
-  return {
-    type: ActionTypes.SELECTED_CITY,
-    payload: city,
-  };
-};
-
-export const loadRequest = createAsyncThunk('get', async (dispatch) => {
+export const loadStatesRequest = createAsyncThunk('get', async (dispatch) => {
   dispatch(fetchLoading());
   try {
-    const response = await fetch(
-      'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
+    const response = await fetch(`${BASE_URL}/v1/localidades/estados/`);
+    const responseMap = await fetch(
+      `${BASE_URL}/v3/malhas/paises/BR?intrarregiao=UF`
     );
     const data = await response.json();
-    console.log(data);
-    await dispatch(fetchSuccess(data));
+    let dataMap = await responseMap.text();
+
+    for (const state of data)
+      dataMap = dataMap.replace(`id="${state.id}"`, `id="UF-${state.id}"`);
+
+    dispatch(fetchSuccessMapBrazil(dataMap));
+    dispatch(fetchSuccess(data.sort(compare)));
     return data;
   } catch (error) {
-    console.log('asdas');
     dispatch(fetchFailure(error));
+    return !!error;
   }
-
-  //   dispatch(fetchLoading());
-  //   await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
-  //     .then(async (response) => await response.json())
-  //     .then((json) => {
-  //       dispatch(fetchSuccess(json));
-  //       return json;
-  //     })
-  //     .catch((error) => dispatch(fetchFailure(error)));
 });
 
-// export const loadRequest = () => {
-//   return (dispatch) => {
-//     dispatch(fetchLoading());
-//     fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
-//       .then((response) => response.json())
-//       .then((json) => {
-//         dispatch(fetchSuccess(json));
-//         return json;
-//       })
-//       .catch((error) => dispatch(fetchFailure(error)));
-//   };
-// };
+export const loadCitysRequest = createAsyncThunk(
+  'get',
+  async ({ dispatch, id }) => {
+    dispatch(fetchLoading());
+    try {
+      const response = await fetch(
+        `${BASE_URL}/v1/localidades/estados/${id}/municipios`
+      );
+      const data = await response.json();
+      dispatch(fetchSuccessCitys(data.sort(compare)));
+      return data;
+    } catch (error) {
+      dispatch(fetchFailure(error));
+      return !!error;
+    }
+  }
+);
+
+export const loadDistrictsRequest = createAsyncThunk(
+  'get',
+  async ({ dispatch, id }) => {
+    dispatch(fetchLoading());
+    try {
+      const response = await fetch(
+        `${BASE_URL}/v1/localidades/municipios/${id}/distritos`
+      );
+      const responseMap = await fetch(`${BASE_URL}/v3/malhas/municipios/${id}`);
+      const dataMap = await responseMap.text();
+      dispatch(fetchSuccessMapCity(dataMap));
+      const data = await response.json();
+      dispatch(fetchSuccessDistricts(data.sort(compare)));
+      return data;
+    } catch (error) {
+      dispatch(fetchFailure(error));
+      return !!error;
+    }
+  }
+);
