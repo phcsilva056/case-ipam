@@ -54,13 +54,6 @@ export const reducers = (state = INITIAL_STATE, action) => {
         selectedCity: action.payload,
         selectedDistrict: '',
       };
-    case ActionTypes.SELECTED_DISTRICT:
-      return {
-        ...state,
-        loading: false,
-        error: false,
-        selectedDistrict: action.payload,
-      };
     case ActionTypes.FETCH_SUCCESS_MAP_BRAZIL:
       return {
         ...state,

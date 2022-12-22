@@ -23,16 +23,39 @@ export const Container = styled.main`
       display: flex;
       flex-direction: column;
       gap: 20px;
-
       height: fit-content;
       width: 100%;
       max-width: 320px;
+
+      summary,
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      span {
+        font-size: 1rem;
+      }
+
       div {
         display: flex;
         flex-direction: column;
         padding: 16px;
         border-radius: 8px;
         border: 1px solid #515151;
+      }
+
+      details {
+        ul {
+          display: flex;
+          flex-direction: column;
+          max-height: 400px;
+          overflow: auto;
+          list-style: none;
+        }
+        li {
+          border-bottom: 2px solid #515151;
+          padding: 4px 12px;
+        }
       }
     }
   }

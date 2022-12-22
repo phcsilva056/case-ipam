@@ -11,15 +11,14 @@ import {
 import { bindActionCreators } from 'redux';
 import { ActionTypes } from './redux/actions/types';
 import Select from './components/select';
+import Loading from './components/loading';
 
 const App = ({
   actions,
   citys,
   districts,
-  error,
   loading,
   selectedCity,
-  selectedDistrict,
   selectedState,
   states,
   mapBrazil,
@@ -50,26 +49,6 @@ const App = ({
     actions.loadDistricts({ dispatch, id: e.target.value });
   };
 
-  const setSelectedDistrict = (e) => {
-    dispatch({
-      type: ActionTypes.SELECTED_DISTRICT,
-      payload: e.target.value,
-    });
-  };
-  console.log({
-    actions,
-    citys,
-    districts,
-    error,
-    loading,
-    selectedCity,
-    selectedDistrict,
-    selectedState,
-    states,
-    mapBrazil,
-    mapCity,
-  });
-
   const state = states.filter((state) => {
     return state.id == selectedState;
   })[0];
@@ -82,7 +61,7 @@ const App = ({
     <>
       <Header />
       <Container selectedState={selectedState}>
-        {/* {loading && 'Carregando'} */}
+        {loading && <Loading />}
         <div className="box-primary">
           <div className="box-selects">
             <Select
@@ -115,10 +94,14 @@ const App = ({
                 <span>Microrregião : {city.microrregiao.nome}</span>
                 <span>Mesorregião : {city.microrregiao.mesorregiao.nome}</span>
                 <span>Região Imediata: {city['regiao-imediata'].nome}</span>
-                <h3>Distritos{` (${districts.length})`}</h3>
-                {districts.map((district) => {
-                  return <span key={district.id}>{district.nome}</span>;
-                })}
+                <details>
+                  <summary>Distritos{` (${districts.length})`}</summary>
+                  <ul>
+                    {districts.map((district) => {
+                      return <li key={district.id}>{district.nome}</li>;
+                    })}
+                  </ul>
+                </details>
               </div>
             )}
           </div>
