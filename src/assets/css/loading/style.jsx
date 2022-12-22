@@ -2,11 +2,14 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   align-items: center;
-  bottom: 80px;
+  bottom: 120px;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   z-index: 2;
+  background-color: #51515120;
+  border-radius: 50px;
+  padding: 20px;
   img {
     width: 100px;
   }

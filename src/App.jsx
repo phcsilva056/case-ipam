@@ -61,7 +61,7 @@ const App = ({
     <>
       <Header />
       <Container selectedState={selectedState}>
-        {loading && <Loading />}
+        {!loading && <Loading />}
         <div className="box-primary">
           <div className="box-selects">
             <Select
