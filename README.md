@@ -28,7 +28,7 @@
 <h2>O que tem no projeto?</h2>
 
 <p>
-    Projeto possui apenas uma tela onde é possível encontrar dois campos para selecionar estado e cidade, mapa do Brasil onde ao escolher um estado ele ficará de cor escura para destacar
+    Projeto possui apenas uma tela onde é possível encontrar dois campos para selecionar estado e cidade, mapa do território do Brasil onde ao escolher um estado ele ficará de cor escura para destacar, um mapa do território da cidade selecionada e algumas informações referentes as escolhas feitas.
 </p>
 
 <div align="center">
